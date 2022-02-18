@@ -26,5 +26,5 @@ const deploy = async () => {
 deploy()
 
 /*  
-Contract deployed to 0x6b8c3f943CA8F769eafCf56e8dD16C0a0c9fCd60
+Contract deployed to 0x9d93798Ab0a2E77400702d8607f0E9F0D76aB64D
 */
