@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Card, Button } from 'semantic-ui-react'
 import Layout from '../components/Layout'
 import factory from '../ethereum/factory'
@@ -24,7 +24,7 @@ class CampaignIndex extends Component {
 
     render() {
         return (
-            <Layout>
+            <>
                 <h3>Open Campaigns</h3>
                 <Button
                     content="Create Campaign"
@@ -33,7 +33,7 @@ class CampaignIndex extends Component {
                     primary
                 />
                 {this.renderCampaigns()}
-            </Layout>
+            </>
         )
     }
 }

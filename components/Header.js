@@ -3,15 +3,17 @@ import { Menu } from 'semantic-ui-react'
 
 const Header = () => {
     return (
-        <Menu style={{ marginTop: '1em' }}>
-            <Menu.Item>CrowdFund</Menu.Item>
+        <div className="m-t-1">
+            <Menu>
+                <Menu.Item>CrowdFund</Menu.Item>
 
-            <Menu.Menu position="right">
-                <Menu.Item>Campaigns</Menu.Item>
+                <Menu.Menu position="right">
+                    <Menu.Item>Campaigns</Menu.Item>
 
-                <Menu.Item>+</Menu.Item>
-            </Menu.Menu>
-        </Menu>
+                    <Menu.Item>+</Menu.Item>
+                </Menu.Menu>
+            </Menu>
+        </div>
     )
 }
 
