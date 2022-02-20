@@ -24,9 +24,10 @@ contract Campaign {
         mapping(address => bool) approvals;
     }
 
-    Request[] public requests;
+    Request[] public requests; // List of requests the manager has created
     address public manager;
     uint public minimumContribution; 
+     // address[] public approvers; arrays aren't scalable - use mappings for O(1) lookups. Mappings need to be initialised to return an undefined value though
     mapping(address => bool) public approvers;
     uint public approversCount;
 
@@ -48,6 +49,7 @@ contract Campaign {
     }
 
     function createRequest(string description, uint value, address recipient) public restricted {
+        //memory is like a c++ reference pointer to original stored memory address we initialised - as opposed to storage which is a copy of the original (which we'd pass not refer to). 
         Request memory newRequest = Request({
             description: description,
             value: value,
