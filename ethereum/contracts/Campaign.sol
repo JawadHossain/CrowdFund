@@ -1,14 +1,16 @@
-pragma solidity ^0.4.17;
+// SPDX-License-Identifier: MIT
+
+pragma solidity ^0.8.12;
 
 contract CampaignFactory {
-    address[] public deployedCampaigns;
+    Campaign[] public deployedCampaigns;
 
     function createCampaign(uint minimum) public {
-        address newCampaign = new Campaign(minimum, msg.sender);
+        Campaign newCampaign = new Campaign(minimum, msg.sender);
         deployedCampaigns.push(newCampaign);
     }
 
-    function getDeployedCampaigns() public view returns (address[]) {
+    function getDeployedCampaigns() public view returns (Campaign[] memory) {
         return deployedCampaigns;
     }
 }
@@ -18,47 +20,54 @@ contract Campaign {
     struct Request {
         string description;
         uint value;
-        address recipient;
+        address payable recipient;
         bool complete;
         uint approvalCount;
         mapping(address => bool) approvals;
     }
 
-    Request[] public requests; // List of requests the manager has created
     address public manager;
     uint public minimumContribution; 
-     // address[] public approvers; arrays aren't scalable - use mappings for O(1) lookups. Mappings need to be initialised to return an undefined value though
     mapping(address => bool) public approvers;
+    mapping(uint => Request) requests;
     uint public approversCount;
+    uint public requestsCount;
+    uint requestIndex = 0;
 
     modifier restricted() {
         require(msg.sender == manager);
         _;
     }
 
-    function Campaign(uint minimum, address creator) public {
+    constructor(uint minimum, address creator) {
         manager = creator;
         minimumContribution = minimum;
     }
 
     function contribute() public payable {
-        require(msg.value > minimumContribution);
+        require(msg.value > minimumContribution, "Minimum contribution amount not met");
 
+        // increase count if new contributor
+        if (!approvers[msg.sender]) {
+            approversCount++;
+        }
         approvers[msg.sender] = true;
-        approversCount++;
     }
 
-    function createRequest(string description, uint value, address recipient) public restricted {
-        //memory is like a c++ reference pointer to original stored memory address we initialised - as opposed to storage which is a copy of the original (which we'd pass not refer to). 
-        Request memory newRequest = Request({
-            description: description,
-            value: value,
-            recipient: recipient,
-            complete: false,
-            approvalCount: 0
-        });
+    function createRequest(string memory description, uint value, address payable recipient) public restricted {
+        // Check if balance available
+        require(value <= address(this).balance);
 
-        requests.push(newRequest);
+        Request storage request = requests[requestIndex];
+
+        request.description = description;
+        request.recipient = recipient;
+        request.value = value;
+        request.complete = false;
+        request.approvalCount = 0;
+        
+        requestIndex++;
+        requestsCount++;
     }
 
     function approveRequest(uint index) public {
@@ -69,7 +78,6 @@ contract Campaign {
         // add vote
         request.approvals[msg.sender] = true;
         request.approvalCount++;
-
     }
 
     function finalizeRequest(uint index) public restricted {
@@ -92,15 +100,15 @@ contract Campaign {
     ) {
         return (
             minimumContribution,
-            this.balance,
-            requests.length,
+            address(this).balance,
+            requestsCount,
             approversCount,
             manager
         );
     }
 
     function getRequestsCount() public view returns (uint) {
-        return requests.length;
+        return requestsCount;
     }
 
 }
