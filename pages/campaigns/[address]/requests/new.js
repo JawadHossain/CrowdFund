@@ -109,6 +109,13 @@ export async function getStaticProps({ params }) {
         return { props: {} }
     }
 
+    // check campaign address validity with call
+    try {
+        let requestCount = await campaign.methods.getRequestsCount().call()
+    } catch (err) {
+        return { props: {} }
+    }
+
     return {
         props: { address }
     }

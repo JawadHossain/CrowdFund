@@ -1,9 +1,9 @@
 import web3 from './web3'
-import { abi } from './build/Campaign.json'
+import Campaign from './build/Campaign.json'
 
 export default (address) => {
     try {
-        return new web3.eth.Contract(abi, address)
+        return new web3.eth.Contract(Campaign.abi, address)
     } catch (err) {
         return
     }

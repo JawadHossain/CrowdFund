@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Card, Grid, Button } from 'semantic-ui-react'
 import web3 from '../../../ethereum/web3'
 import Link from 'next/link'
 import ContributeForm from '../../../components/ContributeForm'
 import Campaign from '../../../ethereum/campaign'
-import { useRouter } from 'next/router'
 
 const ViewCampaign = (props) => {
     const renderCards = () => {
@@ -98,8 +97,13 @@ export async function getStaticProps({ params }) {
         return { props: {} }
     }
 
-    // fetch campaign details
-    const summary = await campaign.methods.getSummary().call()
+    let summary
+    try {
+        // fetch campaign details
+        summary = await campaign.methods.getSummary().call()
+    } catch (err) {
+        return { props: {} }
+    }
 
     return {
         props: {

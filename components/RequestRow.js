@@ -10,7 +10,7 @@ const RequestRow = (props) => {
 
     const { Row, Cell } = Table
     const { id, request, approversCount } = props
-    const readyToFinalize = request.approversCount > approversCount / 2
+    const readyToFinalize = request.approvalCount > approversCount / 2
 
     const campaign = props.address ? Campaign(props.address) : null
     const router = useRouter()

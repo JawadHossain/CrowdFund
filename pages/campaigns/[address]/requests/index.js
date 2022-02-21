@@ -78,14 +78,22 @@ export async function getStaticProps({ params }) {
         return { props: {} }
     }
 
-    const requestCount = await campaign.methods.getRequestsCount().call()
-    const approversCount = await campaign.methods.approversCount().call()
+    let requestCount
+    let approversCount
+    let requests
 
-    // get requests from contract
-    const requests = []
-    for (let i = 0; i < parseInt(requestCount); i++) {
-        const response = await campaign.methods.requests(i).call()
-        requests.push({ ...response })
+    try {
+        requestCount = await campaign.methods.getRequestsCount().call()
+        approversCount = await campaign.methods.approversCount().call()
+
+        // get requests from contract
+        requests = []
+        for (let i = 0; i < parseInt(requestCount); i++) {
+            const response = await campaign.methods.requests(i).call()
+            requests.push({ ...response })
+        }
+    } catch (err) {
+        return { props: {} }
     }
 
     return {
