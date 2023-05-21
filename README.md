@@ -1,6 +1,6 @@
 # CrowdFund
 
-A Solidity/Next.JS app bult for startups to raise and spend funds in a transparent manner.
+A Solidity/Next.JS app built for startups to raise and spend funds in a transparent manner.
 
 ## Screen Capture
 
